@@ -47,21 +47,21 @@
             <!--
       $outputLines = lines are grouped and sorted by rhyme, and therefore out of original order, 
         but with original order retained as @position attribute, so that $outputLines can be restored
-        to original order before final output
-          spaces are stripped from grouping key (using translate()) so that sounds will match irrespective 
-        of whitespace characters
+            to original order before final output
+        spaces are stripped from grouping key (using translate()) so that sounds will match irrespective 
+            of whitespace characters
     -->
             <xsl:for-each-group select="$input//line"
                 group-by="translate(string-join((stress[last()], text()[not(following-sibling::stress)]), ''), ' ', '')">
                 <!-- All lines in poem; process instead by stanza for poems with multiple stanzas (will break on terza rima) -->
-                <xsl:sort select="position()"/>
                 <!-- 
           Template variables:
           $offset = order of rhyme group in sequence of all rhyme groups, used to choose representative letter
           $letter = letter to represent rhyme group
           $rhymeString = concatenation of final stressed vowel plus all following text() nodes, with spaces stripped
-          $gender = currently only masculine and feminine; add dactylic and hyperdactylic
-            capitalizes rhyme letter for masculine, lowercase for feminine
+            To do: supporting consonant for open masculine rhyme
+          $gender = capitalizes rhyme letter for feminine, lowercase for masculine
+            To do: add dactylic and hyperdactylic
         -->
                 <xsl:variable name="offset" select="position()" as="xs:integer"/>
                 <xsl:variable name="letter" select="$alphabet[$offset]" as="xs:string"/>
@@ -70,7 +70,7 @@
                     select="
                         if (count(for $char in string-to-codepoints(current-grouping-key())
                         return
-                            codepoints-to-string($char)[. = $vowels]) gt 1) then
+                            codepoints-to-string($char)[. = $vowels]) eq 1) then
                             'masc'
                         else
                             'fem'"
@@ -80,7 +80,7 @@
             Attributes on <line> elements in output:
             @rhymeString = concatenation of final stressed vowel plus all following text() nodes, with spaces stripped
               copied from $rhymeString, which is equal to current-grouping-key()
-            @rhyme = uppercase (masculine) or lowercase (feminine) letter, in order of appearance of rhyme group in poem
+            @rhyme = uppercase (feminine) or lowercase (masculine) letter, in order of appearance of rhyme group in poem
             @position = original position of line in poem (to restore original sort order later)
           -->
                     <line rhymeString="{$rhymeString}"
