@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" version="2.0">
+    <!--
+        Filename: rhyme-test_2016-05-11.xsl
+        Developer: djb 2015-05-11
+        Repo: http://github.com/djbpitt/poetry
+        Synopsis: Run against itself to identify rhyme scheme in included $poem variable
+        License: GNU AGPLv3
+    -->
     <xsl:output method="xml" indent="yes"/>
     <xsl:variable name="input" as="element(poem)">
         <!-- 
@@ -41,7 +48,7 @@
     <xsl:variable name="alphabet"
         select="tokenize('a b c d e f g h i j k l m n o p q r s t u v w x y z', ' ')"
         as="xs:string+"/>
-    <xsl:variable name="vowels" select="tokenize(('a e i y o u'), ' ')" as="xs:string+"/>
+    <xsl:variable name="vowels" select="tokenize(('a e i o u'), ' ')" as="xs:string+"/>
     <xsl:template match="/">
         <xsl:variable name="outputLines" as="element(line)+">
             <!--
