@@ -17,6 +17,19 @@
             Convert softening vowels to non-softening
             Strip hard and soft signs
         Stage 7 : djb:romanize() : Romanize now that all information is represented by the segment
+        Stage 8 : djb:finalDevoice() : Devoice obstruents in auslaut
+        Stage 9 : djb:regressiveDevoice() : Regressive devoicing of obstruents and /v/
+            /v/ is easier to handle if we do devoicing first
+        Stage 10: djb:regressiveVoice() : Regressive voicing of obstruents, including /v/
+        
+        To do:
+            Palatalization assimilation (research)
+            c > ts, sč to šč, degeminate
+            Strip all spaces
+        
+        To do eventually:
+            Final -ogo/-ego, except (ne)?mnogo (before stripping spaces)
+            Idiosyncrasies: solnce
     -->
     <xsl:output method="xml" indent="yes"/>
     <xsl:variable name="poem" as="element(poem)">
@@ -62,6 +75,9 @@
         <djb:palatalize/>
         <djb:jot/>
         <djb:romanize/>
+        <djb:finalDevoice/>
+        <djb:regressiveDevoice/>
+        <djb:regressiveVoice/>
         <djb:signOff/>
     </xsl:variable>
     <xsl:template match="line">
@@ -217,6 +233,83 @@
             as="xs:string"/>
         <xsl:apply-templates select="$remaining[1]" mode="#current">
             <xsl:with-param name="input" select="$result"/>
+            <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
+        </xsl:apply-templates>
+        <xsl:if test="empty($remaining)">
+            <xsl:sequence select="$result"/>
+        </xsl:if>
+    </xsl:template>
+    <!-- djb:finalDevoice: Devoice obstruents in auslaut -->
+    <xsl:template match="djb:finalDevoice" mode="operate">
+        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:param name="remaining" as="element()*"/>
+        <xsl:variable name="result" as="xs:string+">
+            <xsl:analyze-string select="$input" regex="([bvgdžzBVGDZ])( |$)">
+                <xsl:matching-substring>
+                    <xsl:value-of
+                        select="concat(translate(regex-group(1), 'bvgdžzBVGDZ', 'pfktšsPFKTS'), regex-group(2))"
+                    />
+                </xsl:matching-substring>
+                <xsl:non-matching-substring>
+                    <xsl:value-of select="."/>
+                </xsl:non-matching-substring>
+            </xsl:analyze-string>
+        </xsl:variable>
+        <xsl:apply-templates select="$remaining[1]" mode="#current">
+            <xsl:with-param name="input" select="string-join($result, '')"/>
+            <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
+        </xsl:apply-templates>
+        <xsl:if test="empty($remaining)">
+            <xsl:sequence select="$result"/>
+        </xsl:if>
+    </xsl:template>
+    <!-- djb:regressiveDevoice: Regressive devoicing of obstruents, including /v/ -->
+    <xsl:template match="djb:regressiveDevoice" mode="operate">
+        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:param name="remaining" as="element()*"/>
+        <xsl:variable name="result" as="xs:string+">
+            <xsl:analyze-string select="$input"
+                regex="([bvgdžzBVGDZpfktšsPFKTSkcČ]+)([pfktšsPFKTSkcČ])">
+                <xsl:matching-substring>
+                    <xsl:value-of
+                        select="concat(translate(regex-group(1), 'bvgdžzBVGDZ', 'pfktšsPFKTS'), regex-group(2))"
+                    />
+                </xsl:matching-substring>
+                <xsl:non-matching-substring>
+                    <xsl:value-of select="."/>
+                </xsl:non-matching-substring>
+            </xsl:analyze-string>
+        </xsl:variable>
+        <xsl:apply-templates select="$remaining[1]" mode="#current">
+            <xsl:with-param name="input" select="string-join($result, '')"/>
+            <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
+        </xsl:apply-templates>
+        <xsl:if test="empty($remaining)">
+            <xsl:sequence select="$result"/>
+        </xsl:if>
+    </xsl:template>
+    <!-- djb:regressiveVoice: Regressive devoicing of obstruents, including /v/
+        ɣ (LC) = U+0263, Ɣ (UC) = U+0194
+        ʒ (LC) = U+0292, Ʒ (UC) = U+01B7
+        ǯ (LC) = U+01EF, Ǯ (UC) = U+01EE        
+    -->
+    <xsl:template match="djb:regressiveVoice" mode="operate">
+        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:param name="remaining" as="element()*"/>
+        <xsl:variable name="result" as="xs:string+">
+            <xsl:analyze-string select="$input" regex="([bvgdžzBVGDZpfktšsPFKTSkcČ]+)([bgdžzBGDZ])">
+                <xsl:matching-substring>
+                    <xsl:value-of
+                        select="concat(translate(regex-group(1), 'pfktšsPFKTSxcČ', 'bvgdžzBVGDZɣʒǮ'), regex-group(2))"
+                    />
+                </xsl:matching-substring>
+                <xsl:non-matching-substring>
+                    <xsl:value-of select="."/>
+                </xsl:non-matching-substring>
+            </xsl:analyze-string>
+        </xsl:variable>
+        <xsl:apply-templates select="$remaining[1]" mode="#current">
+            <xsl:with-param name="input" select="string-join($result, '')"/>
             <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
         </xsl:apply-templates>
         <xsl:if test="empty($remaining)">
