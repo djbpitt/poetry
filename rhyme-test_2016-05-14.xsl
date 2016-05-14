@@ -38,30 +38,71 @@
     <xsl:output method="xml" indent="yes"/>
     <xsl:variable name="poem" as="element(poem)">
         <poem>
-            <line>"Мой д<stress>я</stress>дя с<stress>а</stress>мых ч<stress>е</stress>стных
-                    пр<stress>а</stress>вил,</line>
-            <line>Когд<stress>а</stress> не в ш<stress>у</stress>тку
-                занем<stress>о</stress>г,</line>
-            <line>Он уваж<stress>а</stress>ть себ<stress>я</stress> заст<stress>а</stress>вил</line>
-            <line>И л<stress>у</stress>чше в<stress>ы</stress>думать не м<stress>о</stress>г.</line>
-            <line>Ег<stress>о</stress> прим<stress>е</stress>р друг<stress>и</stress>м
-                    на<stress>у</stress>ка;</line>
-            <line>Но, б<stress>о</stress>же м<stress>о</stress>й, как<stress>а</stress>я
-                    ск<stress>у</stress>ка</line>
-            <line>С больн<stress>ы</stress>м сид<stress>е</stress>ть и д<stress>е</stress>нь и
-                    н<stress>о</stress>чь,</line>
-            <line>Не отход<stress>я</stress> ни ш<stress>а</stress>гу пр<stress>о</stress>чь!</line>
-            <line>Как<stress>о</stress>е н<stress>и</stress>зкое ков<stress>а</stress>рство</line>
-            <line>Полу-жив<stress>о</stress>го забавл<stress>я</stress>ть,</line>
-            <line>Ем<stress>у</stress> под<stress>у</stress>шки поправл<stress>я</stress>ть,</line>
-            <line>Печ<stress>а</stress>льно поднос<stress>и</stress>ть
-                лек<stress>а</stress>рство,</line>
-            <line>Вздых<stress>а</stress>ть и д<stress>у</stress>мать про
-                себ<stress>я</stress>:</line>
-            <line>Когд<stress>а</stress> же ч<stress>о</stress>рт возьм<stress>ё</stress>т
-                    теб<stress>я</stress>!"</line>
+            <stanza>
+                <line>"Мой д<stress>я</stress>дя с<stress>а</stress>мых ч<stress>е</stress>стных
+                        пр<stress>а</stress>вил,</line>
+                <line>Когд<stress>а</stress> не в ш<stress>у</stress>тку
+                    занем<stress>о</stress>г,</line>
+                <line>Он уваж<stress>а</stress>ть себ<stress>я</stress>
+                    заст<stress>а</stress>вил</line>
+                <line>И л<stress>у</stress>чше в<stress>ы</stress>думать не
+                    м<stress>о</stress>г.</line>
+                <line>Ег<stress>о</stress> прим<stress>е</stress>р друг<stress>и</stress>м
+                        на<stress>у</stress>ка;</line>
+                <line>Но, б<stress>о</stress>же м<stress>о</stress>й, как<stress>а</stress>я
+                        ск<stress>у</stress>ка</line>
+                <line>С больн<stress>ы</stress>м сид<stress>е</stress>ть и д<stress>е</stress>нь и
+                        н<stress>о</stress>чь,</line>
+                <line>Не отход<stress>я</stress> ни ш<stress>а</stress>гу
+                    пр<stress>о</stress>чь!</line>
+                <line>Как<stress>о</stress>е н<stress>и</stress>зкое
+                    ков<stress>а</stress>рство</line>
+                <line>Полу-жив<stress>о</stress>го забавл<stress>я</stress>ть,</line>
+                <line>Ем<stress>у</stress> под<stress>у</stress>шки
+                    поправл<stress>я</stress>ть,</line>
+                <line>Печ<stress>а</stress>льно поднос<stress>и</stress>ть
+                    лек<stress>а</stress>рство,</line>
+                <line>Вздых<stress>а</stress>ть и д<stress>у</stress>мать про
+                    себ<stress>я</stress>:</line>
+                <line>Когд<stress>а</stress> же ч<stress>о</stress>рт возьм<stress>ё</stress>т
+                        теб<stress>я</stress>!"</line>
+            </stanza>
+            <stanza>
+                <line>Так д<stress>у</stress>мал молод<stress>о</stress>й
+                    пов<stress>е</stress>са,</line>
+                <line>Лет<stress>я</stress> в пыл<stress>и</stress> на
+                    почтов<stress>ы</stress>х,</line>
+                <line>Всев<stress>ы</stress>шней в<stress>о</stress>лею
+                    Зев<stress>е</stress>са</line>
+                <line>Насл<stress>е</stress>дник вс<stress>е</stress>х сво<stress>и</stress>х
+                        родн<stress>ы</stress>х.</line>
+                <line>Друзь<stress>я</stress> Людм<stress>и</stress>лы и
+                    Русл<stress>а</stress>на!</line>
+                <line>С гер<stress>о</stress>ем моег<stress>о</stress>
+                    ром<stress>а</stress>на</line>
+                <line>Без предисл<stress>о</stress>вий, с<stress>е</stress>й же
+                    ч<stress>а</stress>с</line>
+                <line>Позв<stress>о</stress>льте познак<stress>о</stress>мить
+                    в<stress>а</stress>с:</line>
+                <line>Он<stress>е</stress>гин, д<stress>о</stress>брый м<stress>о</stress>й
+                        при<stress>я</stress>тель,</line>
+                <line>Род<stress>и</stress>лся на брег<stress>а</stress>х
+                    Нев<stress>ы</stress>,</line>
+                <line>Где, м<stress>о</stress>жет б<stress>ы</stress>ть, род<stress>и</stress>лись
+                        в<stress>ы</stress></line>
+                <line>Или блист<stress>а</stress>ли, м<stress>о</stress>й
+                    чит<stress>а</stress>тель;</line>
+                <line>Там н<stress>е</stress>когда гул<stress>я</stress>л и
+                    <stress>я</stress>:</line>
+                <line>Но вр<stress>е</stress>ден с<stress>е</stress>вер для
+                    мен<stress>я</stress>.</line>
+            </stanza>
         </poem>
     </xsl:variable>
+    <xsl:variable name="alphabet"
+        select="tokenize('a b c d e f g h i j k l m n o p q r s t u v w x y z', ' ')"
+        as="xs:string+"/>
+    <xsl:variable name="genders" select="tokenize('m f d h', ' ')" as="xs:string+"/>
     <xsl:template match="/">
         <xsl:apply-templates select="$poem"/>
     </xsl:template>
@@ -89,12 +130,63 @@
         <djb:rhymeString/>
         <djb:signOff/>
     </xsl:variable>
+    <!-- Process stanzas here -->
+    <xsl:template match="stanza">
+        <stanza>
+            <!-- Group lines by rhyme strings and assign alphabetic letters in order -->
+            <xsl:variable name="processed" as="element(line)+">
+                <xsl:apply-templates select="line"/>
+            </xsl:variable>
+            <xsl:variable name="outputLines" as="element(line)+">
+                <xsl:for-each-group select="$processed" group-by="@rhymeString">
+                    <xsl:variable name="offset" as="xs:integer" select="position()"/>
+                    <xsl:variable name="posttonic" as="xs:string"
+                        select="replace(current-grouping-key(), '[^aeiou]+', '')"/>
+                    <xsl:variable name="gender" as="xs:string"
+                        select="$genders[position() eq string-length($posttonic) + 1]"/>
+                    <xsl:variable name="letter" as="xs:string"
+                        select="$alphabet[position() eq $offset]"/>
+                    <xsl:variable name="renderedLetter" as="xs:string">
+                        <xsl:choose>
+                            <xsl:when test="$gender eq 'm'">
+                                <xsl:value-of select="$letter"/>
+                            </xsl:when>
+                            <xsl:when test="$gender eq 'f'">
+                                <xsl:value-of select="upper-case($letter)"/>
+                            </xsl:when>
+                            <xsl:when test="$gender eq 'd'">
+                                <xsl:value-of select="concat(upper-case($letter), '′')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="concat(upper-case($letter), '′′')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:for-each select="current-group()">
+                        <line letter="{$renderedLetter}">
+                            <xsl:apply-templates select="@* | node()"/>
+                        </line>
+                    </xsl:for-each>
+                </xsl:for-each-group>
+            </xsl:variable>
+            <xsl:for-each select="$outputLines">
+                <xsl:sort select="number(@position)"/>
+                <xsl:copy-of select="."/>
+            </xsl:for-each>
+        </stanza>
+    </xsl:template>
+    <!-- Process lines here -->
     <xsl:template match="line">
-        <line>
+        <!-- Get the rhyme string -->
+        <xsl:variable name="rhymeString" as="xs:string">
             <xsl:apply-templates select="$operations[1]" mode="operate">
                 <xsl:with-param name="input" select="."/>
                 <xsl:with-param name="remaining" select="remove($operations, 1)"/>
             </xsl:apply-templates>
+        </xsl:variable>
+        <!-- Add line order and rhyme string to line -->
+        <line position="{position()}" rhymeString="{$rhymeString}">
+            <xsl:apply-templates/>
         </line>
     </xsl:template>
     <!-- djb:prepareWords
