@@ -3,6 +3,19 @@
     xmlns:djb="http://www.obdurodon.org" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all" version="2.0">
     <!--
+        Filename: rhyme-test_2016-05-11.xsl
+        Developer: djb 2015-05-14
+        Repo: http://github.com/djbpitt/poetry
+        Synopsis: Run against itself to identify rhyme scheme in included $poem variable
+        Notes:
+            Regex based on:
+                http://akhmatova.obdurodon.org/resources.html
+                http://dh.obdurodon.org/drupal/iterating-over-transformations-without-you-know-hitting-go-million-times
+            Thanks to WP for the "visitor pattern" pointer            
+        License: GNU AGPLv3
+
+        Visitor pattern steps
+        =====================
         djb:prepareWords() : Flatten
             Convert stressed vowels to uppercase and remove stress tags
             Convert other text to lowercase
@@ -26,11 +39,13 @@
         djb:vowelReducation() : unstressed non-high vowels are i after soft consonants and i < e, a < o after hard
         djb:stripSpaces() : remove all spaces
         djb:rhymeString() : extract rhyme string (last stressed vowel, all following, supporting C for open masculine)
-        
+
+        To fix:
+            Supporting /j/ matches supporting soft consonant (Scherr 200)
+
         To do eventually:
             Final -ogo/-ego (before stripping spaces), except:
                 (ne)?mnogo, strogo, ubogo, razlogo, otlogo, pologo, segodnja
-            (Wade, sections 12–13, p. 13)
             Č > š: что(б?ы)?, конечн.*, нарочн.*, очечник.*, прачечн.*, скучно, яичниц.*, ильиничн.*, саввичн.*, никитичн.*
             Idiosyncrasies: solnc.*, zdravstvuj.*, čuvstv*, zvezdn.*, landšaft.*, pozdno, prazdnik.*, serdc.*, grustn.*,
                 izvestn.*, lestn.*, mestn.*, okrestnost.*, častn.*, sčastliv.*
