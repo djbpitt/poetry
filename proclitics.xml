@@ -1,3 +1,10 @@
+<!--
+        Filename: proclitics.xml
+        Developer: djb 2015-05-15
+        Repo: http://github.com/djbpitt/poetry
+        Synopsis: List of proclitics, intended for import into proclitic_inc.xml
+        License: GNU AGPLv3
+-->
 <proclitics>
     <proclitic>а</proclitic>
     <proclitic>без</proclitic>
@@ -15,6 +22,8 @@
     <proclitic>из-за</proclitic>
     <proclitic>из-под</proclitic>
     <proclitic>изо</proclitic>
+    <proclitic>или</proclitic>
+    <proclitic>иль</proclitic>
     <proclitic>к</proclitic>
     <proclitic>ко</proclitic>
     <proclitic>меж</proclitic>

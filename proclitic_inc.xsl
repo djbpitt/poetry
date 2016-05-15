@@ -9,6 +9,7 @@
         Synopsis:
             Import to merge proclitics with following words in string sequence
             Call as djb:proclitic($input, 1)
+        Dependency: proclitics.xml (in same directory)
         License: GNU AGPLv3
     -->
     <xsl:variable name="proclitics" select="document('proclitics.xml')//proclitic" as="element(proclitic)+"/>

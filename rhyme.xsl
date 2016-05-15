@@ -11,6 +11,9 @@
             Add rhyme scheme annotation and line number within stanza to XML input
             May be run against itself to identify rhyme scheme in included $poem variable
             Identifies only exact rhyme; intended for postprocessing to identify inexact rhyme
+        Dependencies in same directory:
+            proclitic_inc.xsl (which imports proclitics.xml from same directory)
+            enclitic_inc.xsl (which imports enclitics.xml from same directory)
         Notes:
             Regex based on:
                 http://akhmatova.obdurodon.org/resources.html
@@ -54,65 +57,72 @@
     <xsl:output method="xml" indent="yes"/>
     <xsl:variable name="poem" as="element(poem)">
         <poem>
-            <stanza>
-                <line>"Мой д<stress>я</stress>дя с<stress>а</stress>мых ч<stress>е</stress>стных
-                        пр<stress>а</stress>вил,</line>
-                <line>Когд<stress>а</stress> не в ш<stress>у</stress>тку
-                    занем<stress>о</stress>г,</line>
-                <line>Он уваж<stress>а</stress>ть себ<stress>я</stress>
-                    заст<stress>а</stress>вил</line>
-                <line>И л<stress>у</stress>чше в<stress>ы</stress>думать не
-                    м<stress>о</stress>г.</line>
-                <line>Ег<stress>о</stress> прим<stress>е</stress>р друг<stress>и</stress>м
-                        на<stress>у</stress>ка;</line>
-                <line>Но, б<stress>о</stress>же м<stress>о</stress>й, как<stress>а</stress>я
-                        ск<stress>у</stress>ка</line>
-                <line>С больн<stress>ы</stress>м сид<stress>е</stress>ть и д<stress>е</stress>нь и
-                        н<stress>о</stress>чь,</line>
-                <line>Не отход<stress>я</stress> ни ш<stress>а</stress>гу
-                    пр<stress>о</stress>чь!</line>
-                <line>Как<stress>о</stress>е н<stress>и</stress>зкое
-                    ков<stress>а</stress>рство</line>
-                <line>Полу-жив<stress>о</stress>го забавл<stress>я</stress>ть,</line>
-                <line>Ем<stress>у</stress> под<stress>у</stress>шки
-                    поправл<stress>я</stress>ть,</line>
-                <line>Печ<stress>а</stress>льно поднос<stress>и</stress>ть
-                    лек<stress>а</stress>рство,</line>
-                <line>Вздых<stress>а</stress>ть и д<stress>у</stress>мать про
-                    себ<stress>я</stress>:</line>
-                <line>Когд<stress>а</stress> же ч<stress>о</stress>рт возьм<stress>ё</stress>т
-                        теб<stress>я</stress>!"</line>
-            </stanza>
-            <stanza>
-                <line>Так д<stress>у</stress>мал молод<stress>о</stress>й
-                    пов<stress>е</stress>са,</line>
-                <line>Лет<stress>я</stress> в пыл<stress>и</stress> на
-                    почтов<stress>ы</stress>х,</line>
-                <line>Всев<stress>ы</stress>шней в<stress>о</stress>лею
-                    Зев<stress>е</stress>са</line>
-                <line>Насл<stress>е</stress>дник вс<stress>е</stress>х сво<stress>и</stress>х
-                        родн<stress>ы</stress>х.</line>
-                <line>Друзь<stress>я</stress> Людм<stress>и</stress>лы и
-                    Русл<stress>а</stress>на!</line>
-                <line>С гер<stress>о</stress>ем моег<stress>о</stress>
-                    ром<stress>а</stress>на</line>
-                <line>Без предисл<stress>о</stress>вий, с<stress>е</stress>й же
-                    ч<stress>а</stress>с</line>
-                <line>Позв<stress>о</stress>льте познак<stress>о</stress>мить
-                    в<stress>а</stress>с:</line>
-                <line>Он<stress>е</stress>гин, д<stress>о</stress>брый м<stress>о</stress>й
-                        при<stress>я</stress>тель,</line>
-                <line>Род<stress>и</stress>лся на брег<stress>а</stress>х
-                    Нев<stress>ы</stress>,</line>
-                <line>Где, м<stress>о</stress>жет б<stress>ы</stress>ть, род<stress>и</stress>лись
-                        в<stress>ы</stress></line>
-                <line>Или блист<stress>а</stress>ли, м<stress>о</stress>й
-                    чит<stress>а</stress>тель;</line>
-                <line>Там н<stress>е</stress>когда гул<stress>я</stress>л и
-                    <stress>я</stress>:</line>
-                <line>Но вр<stress>е</stress>ден с<stress>е</stress>вер для
-                    мен<stress>я</stress>.</line>
-            </stanza>
+            <meta>
+                <author>Pushkin</author>
+                <title>EO</title>
+                <note>First two stanzas</note>
+            </meta>
+            <body>
+                <stanza>
+                    <line>"Мой д<stress>я</stress>дя с<stress>а</stress>мых ч<stress>е</stress>стных
+                            пр<stress>а</stress>вил,</line>
+                    <line>Когд<stress>а</stress> не в ш<stress>у</stress>тку
+                        занем<stress>о</stress>г,</line>
+                    <line>Он уваж<stress>а</stress>ть себ<stress>я</stress>
+                        заст<stress>а</stress>вил</line>
+                    <line>И л<stress>у</stress>чше в<stress>ы</stress>думать не
+                        м<stress>о</stress>г.</line>
+                    <line>Ег<stress>о</stress> прим<stress>е</stress>р друг<stress>и</stress>м
+                            на<stress>у</stress>ка;</line>
+                    <line>Но, б<stress>о</stress>же м<stress>о</stress>й, как<stress>а</stress>я
+                            ск<stress>у</stress>ка</line>
+                    <line>С больн<stress>ы</stress>м сид<stress>е</stress>ть и д<stress>е</stress>нь
+                        и н<stress>о</stress>чь,</line>
+                    <line>Не отход<stress>я</stress> ни ш<stress>а</stress>гу
+                        пр<stress>о</stress>чь!</line>
+                    <line>Как<stress>о</stress>е н<stress>и</stress>зкое
+                        ков<stress>а</stress>рство</line>
+                    <line>Полу-жив<stress>о</stress>го забавл<stress>я</stress>ть,</line>
+                    <line>Ем<stress>у</stress> под<stress>у</stress>шки
+                        поправл<stress>я</stress>ть,</line>
+                    <line>Печ<stress>а</stress>льно поднос<stress>и</stress>ть
+                        лек<stress>а</stress>рство,</line>
+                    <line>Вздых<stress>а</stress>ть и д<stress>у</stress>мать про
+                            себ<stress>я</stress>:</line>
+                    <line>Когд<stress>а</stress> же ч<stress>о</stress>рт возьм<stress>ё</stress>т
+                            теб<stress>я</stress>!"</line>
+                </stanza>
+                <stanza>
+                    <line>Так д<stress>у</stress>мал молод<stress>о</stress>й
+                        пов<stress>е</stress>са,</line>
+                    <line>Лет<stress>я</stress> в пыл<stress>и</stress> на
+                        почтов<stress>ы</stress>х,</line>
+                    <line>Всев<stress>ы</stress>шней в<stress>о</stress>лею
+                        Зев<stress>е</stress>са</line>
+                    <line>Насл<stress>е</stress>дник вс<stress>е</stress>х сво<stress>и</stress>х
+                            родн<stress>ы</stress>х.</line>
+                    <line>Друзь<stress>я</stress> Людм<stress>и</stress>лы и
+                        Русл<stress>а</stress>на!</line>
+                    <line>С гер<stress>о</stress>ем моег<stress>о</stress>
+                        ром<stress>а</stress>на</line>
+                    <line>Без предисл<stress>о</stress>вий, с<stress>е</stress>й же
+                            ч<stress>а</stress>с</line>
+                    <line>Позв<stress>о</stress>льте познак<stress>о</stress>мить
+                            в<stress>а</stress>с:</line>
+                    <line>Он<stress>е</stress>гин, д<stress>о</stress>брый м<stress>о</stress>й
+                            при<stress>я</stress>тель,</line>
+                    <line>Род<stress>и</stress>лся на брег<stress>а</stress>х
+                        Нев<stress>ы</stress>,</line>
+                    <line>Где, м<stress>о</stress>жет б<stress>ы</stress>ть,
+                        род<stress>и</stress>лись в<stress>ы</stress></line>
+                    <line>Или блист<stress>а</stress>ли, м<stress>о</stress>й
+                        чит<stress>а</stress>тель;</line>
+                    <line>Там н<stress>е</stress>когда гул<stress>я</stress>л и
+                        <stress>я</stress>:</line>
+                    <line>Но вр<stress>е</stress>ден с<stress>е</stress>вер для
+                            мен<stress>я</stress>.</line>
+                </stanza>
+            </body>
         </poem>
     </xsl:variable>
     <xsl:variable name="alphabet"
@@ -120,7 +130,17 @@
         as="xs:string+"/>
     <xsl:variable name="genders" select="tokenize('m f d h', ' ')" as="xs:string+"/>
     <xsl:template match="/">
-        <xsl:apply-templates select="$poem"/>
+        <xsl:choose>
+            <xsl:when test="tokenize(base-uri(), '/')[last()] eq 'rhyme.xsl'">
+                <xsl:apply-templates select="$poem"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template match="poem">
+        <xsl:apply-templates select="body"/>
     </xsl:template>
     <xsl:template match="node() | @*">
         <xsl:copy>

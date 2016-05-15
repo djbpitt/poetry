@@ -9,6 +9,7 @@
         Synopsis:
             Import to merge enclitics with preceding words in string sequence
             Call as djb:enclitic($input, 1)
+        Dependency: imports enclitics.xml (from same directory)
         License: GNU AGPLv3
     -->
     <xsl:variable name="enclitics" select="document('enclitics.xml')//enclitic"

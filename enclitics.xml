@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+        Filename: enclitics.xml
+        Developer: djb 2015-05-15
+        Repo: http://github.com/djbpitt/poetry
+        Synopsis: List of enclitics, intended for import into enclitic_inc.xml
+        License: GNU AGPLv3
+-->
 <enclitics>
     <enclitic>бо</enclitic>
     <enclitic>бы</enclitic>
