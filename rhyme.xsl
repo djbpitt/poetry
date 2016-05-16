@@ -7,11 +7,11 @@
         Developer: djb 2015-05-15
         Repo: http://github.com/djbpitt/poetry
         Synopsis:
-            Normal input is XML document with <poem> -> <stanza> -> <line>, where line has <stress> and text() nodes
-            Add rhyme scheme annotation and line number within stanza to XML input
-            May be run against itself to identify rhyme scheme in included $poem variable
+            Adds rhyme scheme annotation and line numbers within stanza to XML input
             Identifies only exact rhyme; intended for postprocessing to identify inexact rhyme
-        Dependencies in same directory:
+            Normal input is XML document with <poem> -> <body> -> <stanza> -> <line>, where line has <stress> and text() nodes
+            May also be run against itself to identify rhyme scheme in included $poem variable
+        Dependencies (in same directory):
             proclitic_inc.xsl (which imports proclitics.xml from same directory)
             enclitic_inc.xsl (which imports enclitics.xml from same directory)
         Notes:
@@ -47,7 +47,7 @@
         djb:stripSpaces() : remove all spaces
         djb:rhymeString() : extract rhyme string (last stressed vowel, all following, supporting C for open masculine)
 
-        To do eventually:
+        To do: ad hoc lexical modifications:
             Final -ogo/-ego (before stripping spaces), except:
                 (ne)?mnogo, strogo, ubogo, razlogo, otlogo, pologo, segodnja
             Č > š: что(б?ы)?, конечн.*, нарочн.*, очечник.*, прачечн.*, скучно, яичниц.*, ильиничн.*, саввичн.*, никитичн.*
