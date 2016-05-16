@@ -262,25 +262,25 @@
                 <!-- ******************************************* -->
                 <!-- djb:proclitics: Merge proclitics with bases -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'proclitics'">
+                <xsl:when test="self::djb:proclitics">
                     <xsl:sequence select="djb:proclitic($input, 1)"/>
                 </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:enclitics: Merge enclitics with bases -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'enclitics'">
+                <xsl:when test="self::djb:enclitics">
                     <xsl:sequence select="djb:enclitic($input, 1)"/>
                 </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:tsa: Convert ть?ся$ to тса -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'tsa'">
+                <xsl:when test="self::djb:tsa">
                     <xsl:sequence select="replace($input, 'ться$', 'тса')"/>
                 </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:palatalize: Capitalize all palatalized consonants (including unpaired) -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'palatalize'">
+                <xsl:when test="self::djb:palatalize">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
                             regex="([бвгдзклмнпрстфх])([яеиёюЯЕИЁЮь])">
@@ -303,7 +303,7 @@
                     Convert softening vowels to non-softening
                     Strip hard and soft signs
                 -->
-                <xsl:when test="local-name() eq 'jot'">
+                <xsl:when test="self::djb:jot">
                     <!-- $result1 processes softening vowels after vowels and signs, but not in anlaut-->
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
@@ -336,7 +336,7 @@
                 <!-- ******************************************* -->
                 <!-- djb:romanize: Romanize now that all information is encoded in the segment -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'romanize'">
+                <xsl:when test="self::djb:romanize">
                     <xsl:sequence
                         select="replace(translate($input, 'абвгджзклмнопрстуфхцшыэАБВГДЖЗЙКЛМНОПРСТУФХЦЧШЩЫЭ', 'abvgdžzklmnoprstufxcšieABVGDŽZJKLMNOPRSTUFXCČŠQIE'), 'Q', 'ŠČ')"
                     />
@@ -344,7 +344,7 @@
                 <!-- ******************************************* -->
                 <!-- djb:finalDevoice: Devoice obstruents in auslaut -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'finalDevoice'">
+                <xsl:when test="self::djb:finalDevoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="([bvgdžzBVGDZ])( |$)">
                             <xsl:matching-substring>
@@ -362,7 +362,7 @@
                 <!-- ******************************************* -->
                 <!-- djb:regressiveDevoice: Regressive devoicing of obstruents, including /v/ -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'regressiveDevoice'">
+                <xsl:when test="self::djb:regressiveDevoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
                             regex="([bvgdžzBVGDZpfktšsPFKTSkcČ]+)([pfktšsPFKTSkcČ])">
@@ -386,7 +386,7 @@
                     ʒ (LC) = U+0292, Ʒ (UC) = U+01B7
                     ǯ (LC) = U+01EF, Ǯ (UC) = U+01EE        
                 -->
-                <xsl:when test="local-name() eq 'regressiveVoice'">
+                <xsl:when test="self::djb:regressiveVoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
                             regex="([bvgdžzBVGDZpfktšsPFKTSkcČ]+)([bgdžzBGDZ])">
@@ -406,7 +406,7 @@
                 <!-- djb:palatalAssimilation: Regressive palatalization assimilation -->
                 <!-- ******************************************* -->
                 <!-- šc has already been split, so requires special treatment -->
-                <xsl:when test="local-name() eq 'palatalAssimilation'">
+                <xsl:when test="self::djb:palatalAssimilation">
                     <xsl:variable name="result3" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="[tdn]+[TDNSZČL]+">
                             <xsl:matching-substring>
@@ -444,7 +444,7 @@
                 <!-- ******************************************* -->
                 <!-- djb:consonantCleanup() : c > ts, sč to šč, degeminate -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'consonantCleanup'">
+                <xsl:when test="self::djb:consonantCleanup">
                     <xsl:variable name="result3" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="c">
                             <xsl:matching-substring>
@@ -480,7 +480,7 @@
                 <!-- ******************************************* -->
                 <!-- djb:vowelReduction() : unstressed non-high vowels are i after soft consonants and i < e, a < o after hard -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'vowelReduction'">
+                <xsl:when test="self::djb:vowelReduction">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="([BVGDJZKLMNPRSTFXČ])([eao])">
                             <xsl:matching-substring>
@@ -496,13 +496,13 @@
                 <!-- ******************************************* -->
                 <!-- djb:stripSpaces() : strip all white space -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'stripSpaces'">
+                <xsl:when test="self::djb:stripSpaces">
                     <xsl:sequence select="translate($input, ' ', '')"/>
                 </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:rhymeString(): rhyme string is last stressed vowel, all following, supporting C for open masculine -->
                 <!-- ******************************************* -->
-                <xsl:when test="local-name() eq 'rhymeString'">
+                <xsl:when test="self::djb:rhymeString">
                     <xsl:variable name="result" as="xs:string">
                         <xsl:analyze-string select="$input" regex="(.)([AEIOU])([^AEIOU]*)$">
                             <xsl:matching-substring>
