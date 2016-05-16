@@ -521,6 +521,18 @@
                     </xsl:variable>
                     <xsl:sequence select="$result"/>
                 </xsl:when>
+                <!-- ******************************************* -->
+                <!-- Default to continue processing if operate step has no code-->
+                <!-- ******************************************* -->
+                <!--<xsl:otherwise>
+                    <xsl:apply-templates select="$remaining[1]" mode="visit">
+                        <xsl:with-param name="remainig" select="remove($remaining, 1)"/>
+                        <xsl:with-param name="so-far" select="so-far"/>
+                    </xsl:apply-templates>
+                </xsl:otherwise>-->
+                <!-- ******************************************* -->
+                <!-- Default to terminate if operate step has no code-->
+                <!-- ******************************************* -->
                 <xsl:otherwise>
                     <xsl:message terminate="yes">Unmatched visitor element <xsl:value-of
                             select="local-name()"/></xsl:message>
