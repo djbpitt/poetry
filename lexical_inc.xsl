@@ -8,7 +8,7 @@
         Repo: http://github.com/djbpitt/poetry
         Synopsis:
             Import to adjust spelling of lexical pronunciation exceptions
-            Call as djb:lexical($input, 1)
+            Call as djb:lexical($input)
         Dependency: lexical.xml (in same directory)
         License: GNU AGPLv3
     -->
@@ -36,7 +36,6 @@
         <xsl:variable name="tokenized" select="tokenize($input, '\s+')"/>
         <xsl:variable name="results" as="xs:string+">
             <xsl:for-each select="$tokenized">
-                <xsl:variable name="currentToken" as="xs:string" select="."/>
                 <xsl:choose>
                     <xsl:when test="matches(., $orthRegex)">
                         <xsl:sequence select="djb:replaceOrths(., 1)"/>
