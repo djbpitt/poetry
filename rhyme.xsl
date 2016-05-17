@@ -150,6 +150,7 @@
     <!-- "Visitor" pattern; perform operations in this order -->
     <xsl:variable name="operations" as="element()+">
         <djb:prepareWords/>
+        <djb:lexical/>
         <djb:proclitics/>
         <djb:enclitics/>
         <djb:tsa/>
@@ -162,6 +163,11 @@
         <djb:palatalAssimilation/>
         <djb:consonantCleanup/>
         <djb:vowelReduction/>
+        <!-- 
+            diagnosticOutput writes the string to stderr as an <xsl:message>
+            move it around or comment it out, as appropriate
+        -->
+        <djb:diagnosticOutput/>
         <djb:stripSpaces/>
         <djb:rhymeString/>
     </xsl:variable>
@@ -253,12 +259,19 @@
     </xsl:template>
     <xsl:include href="proclitic_inc.xsl"/>
     <xsl:include href="enclitic_inc.xsl"/>
+    <xsl:include href="lexical_inc.xsl"/>
     <!-- all visitor elements except djb:prepareWords, which requires element (not string) input -->
     <xsl:template match="djb:*" mode="operate">
         <xsl:param name="input" as="xs:string" required="yes"/>
         <xsl:param name="remaining" as="element()*"/>
         <xsl:variable name="results" as="xs:string*">
             <xsl:choose>
+                <!-- ******************************************* -->
+                <!-- djb:lexical: Idiosyncrasies in pronunciation (including -ogo) -->
+                <!-- ******************************************* -->
+                <xsl:when test="self::djb:lexical">
+                    <xsl:sequence select="djb:lexical($input)"/>
+                </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:proclitics: Merge proclitics with bases -->
                 <!-- ******************************************* -->
@@ -492,6 +505,15 @@
                         </xsl:analyze-string>
                     </xsl:variable>
                     <xsl:sequence select="translate(string-join($result1, ''), 'eo', 'ia')"/>
+                </xsl:when>
+                <!-- ******************************************* -->
+                <!-- djb:diagnosticOutput() : write string to stderr as <xsl:message> -->
+                <!-- ******************************************* -->
+                <xsl:when test="self::djb:diagnosticOutput">
+                    <xsl:message>
+                        <xsl:sequence select="$input"/>
+                    </xsl:message>
+                    <xsl:sequence select="$input"/>
                 </xsl:when>
                 <!-- ******************************************* -->
                 <!-- djb:stripSpaces() : strip all white space -->

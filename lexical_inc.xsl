@@ -40,7 +40,7 @@
                     <xsl:text>севОдня</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:value-of select="replace($input, '([оОеЕ])го$', '$1во')"/>
+                    <xsl:value-of select="replace($input, '([оОеЕ])г([оО])$', '$1в$2')"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -70,6 +70,6 @@
                 </xsl:choose>
             </xsl:for-each>
         </xsl:variable>
-        <xsl:sequence select="$results"/>
+        <xsl:sequence select="string-join($results, ' ')"/>
     </xsl:function>
 </xsl:stylesheet>

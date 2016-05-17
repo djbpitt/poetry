@@ -12,7 +12,8 @@
         Dependency: proclitics.xml (in same directory)
         License: GNU AGPLv3
     -->
-    <xsl:variable name="proclitics" select="document('proclitics.xml')//proclitic" as="element(proclitic)+"/>
+    <xsl:variable name="proclitics" select="document('proclitics.xml')//proclitic"
+        as="element(proclitic)+"/>
     <xsl:function name="djb:proclitic" as="xs:string+">
         <xsl:param name="input" as="xs:string" required="yes"/>
         <xsl:param name="pos" as="xs:integer" required="yes"/>
