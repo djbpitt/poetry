@@ -3,7 +3,8 @@
     xmlns:djb="http://www.obdurodon.org" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all" version="2.0">
     <xsl:output method="xml" indent="yes"/>
-    <xsl:variable name="input" as="xs:string">что конЕчно слОн чАстный чтОбы скУчно</xsl:variable>
+    <xsl:variable name="input" as="xs:string">что конЕчно слОн чАстный чтОбы скУчно стрОго сИнего
+        большОго</xsl:variable>
     <xsl:include href="lexical_inc.xsl"/>
     <xsl:template match="/">
         <root>

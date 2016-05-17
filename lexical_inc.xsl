@@ -11,6 +11,9 @@
             Call as djb:lexical($input)
         Dependency: lexical.xml (in same directory)
         License: GNU AGPLv3
+        
+        Ad hoc pairs are imported from lexical.xml
+        -ogo/-ego are handled separately
     -->
     <xsl:function name="djb:replaceOrths" as="xs:string">
         <xsl:param name="input" as="xs:string"/>
@@ -26,11 +29,32 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
+    <xsl:function name="djb:ogo" as="xs:string">
+        <xsl:param name="input" as="xs:string"/>
+        <xsl:variable name="result" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="$input = $ogoExceptions">
+                    <xsl:value-of select="$input"/>
+                </xsl:when>
+                <xsl:when test="$input eq 'сегОдня'">
+                    <xsl:text>севОдня</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="replace($input, '([оОеЕ])го$', '$1во')"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:sequence select="$result"/>
+    </xsl:function>
+    <!-- Variables and keys -->
     <xsl:variable name="lexicalPairsDoc" as="document-node()" select="document('lexical.xml')"/>
     <xsl:variable name="orths" as="xs:string+" select="$lexicalPairsDoc//orth"/>
     <xsl:variable name="orthRegex" as="xs:string"
         select="concat('(', string-join($orths, '|'), ')')"/>
     <xsl:key name="pairByOrth" match="pair" use="orth"/>
+    <xsl:variable name="ogoExceptions" as="xs:string+"
+        select="tokenize('немнОго мнОго стрОго убОго разлОго отлОго полОго', ' ')"/>
+    <!-- lexical() : processes idiosyncratic lexical exceptions -->
     <xsl:function name="djb:lexical" as="xs:string+">
         <xsl:param name="input" as="xs:string" required="yes"/>
         <xsl:variable name="tokenized" select="tokenize($input, '\s+')"/>
@@ -38,10 +62,10 @@
             <xsl:for-each select="$tokenized">
                 <xsl:choose>
                     <xsl:when test="matches(., $orthRegex)">
-                        <xsl:sequence select="djb:replaceOrths(., 1)"/>
+                        <xsl:sequence select="djb:replaceOrths(djb:ogo(.), 1)"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="."/>
+                        <xsl:sequence select="djb:ogo(.)"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
