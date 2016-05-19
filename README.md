@@ -26,11 +26,19 @@ Run **rhyme.xsl** against XML input document or against itself. Input must be st
 	
 Note that `<stanza>` is required. `<line>` elements contain a combination of `text()` nodes and `<stress>` elements.
 
-Imports **lexical_inc.xsl**, **proclitic_inc.xsl**, and **enclitic_inc.xsl** from the same directory.
+##Imports
+All imports are from the same directory
 
-##Auxiliary supporting files
-* **proclitic_inc.xsl** and **enclitic_inc.xsl** are imported (from the same directory) by others to merge proclitics and enclitics with head words. Imports **proclitics.xml** and **enclitics.xml**, respectively, also from the same directory.
-* **lexical_inc.xsl** is imported (from the same directory) to manage lexical exceptions to the orthography-to-phonetics algorithm. Imports **lexical.xml**, also from the same directory.
+###proclitic\_inc.xsl, enclitic\_inc.xsl
+Merge proclitics and enclitics with head words. These files import **proclitics.xml** and **enclitics.xml**, respectively.
+
+###lexical_inc.xsl
+Manages lexical exceptions to the orthography-to-phonetics algorithm. Imports **lexical.xml**.
+
+<!-- Not used; will be needed for approximate matching
+###bitmask.xsl
+Imported by **rhyme.xsl**. The `rhymeComp()` function returns a sequence of three items: 1) a bit string representing their XOR value (1 = location of difference); 2) a list of bit positions that are similar, string-joined across a hyphen; and 3) the proportion of correspondence as a double between 0 and 1.
+-->
 
 ##Diagnostic
 ###rhyme-test_2016-05-11.xsl

@@ -233,7 +233,7 @@
         </stanza>
     </xsl:template>
     <!-- Process lines here -->
-    <xsl:include href="bitmask.xsl"/>
+    <!--<xsl:include href="bitmask.xsl"/>-->
     <xsl:template match="line">
         <!-- Get the rhyme string -->
         <xsl:variable name="rhymeString" as="xs:string">
