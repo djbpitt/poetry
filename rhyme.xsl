@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:djb="http://www.obdurodon.org" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="#all" version="2.0">
+    xmlns:html="http://www.w3.org/1999/xhtml" xmlns:djb="http://www.obdurodon.org"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
     <!--
         Filename: rhyme.xsl
         Developer: djb 2015-05-15
@@ -55,6 +55,22 @@
                 izvestn.*, lestn.*, mestn.*, okrestnost.*, častn.*, sčastliv.*
     -->
     <xsl:output method="xml" indent="yes"/>
+    <xsl:variable name="featureFile" as="document-node()" select="document('feature-chart.xhtml')"/>
+    <xsl:key name="bitStringBySegment" match="html:tr" use="html:th"/>
+    <xsl:function name="djb:bits" as="xs:string">
+        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:variable name="bitStrings" as="xs:string+">
+            <xsl:for-each
+                select="
+                    for $char in string-to-codepoints($input)
+                    return
+                        codepoints-to-string($char)">
+                <xsl:value-of
+                    select="string-join(key('bitStringBySegment', ., $featureFile)/html:td, '')"/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:sequence select="string-join($bitStrings, '')"/>
+    </xsl:function>
     <xsl:variable name="poem" as="element(poem)">
         <poem>
             <meta>
@@ -167,7 +183,7 @@
             diagnosticOutput writes the string to stderr as an <xsl:message>
             move it around or comment it out, as appropriate
         -->
-        <djb:diagnosticOutput/>
+        <!--<djb:diagnosticOutput/>-->
         <djb:stripSpaces/>
         <djb:rhymeString/>
     </xsl:variable>
@@ -217,6 +233,7 @@
         </stanza>
     </xsl:template>
     <!-- Process lines here -->
+    <xsl:include href="bitmask.xsl"/>
     <xsl:template match="line">
         <!-- Get the rhyme string -->
         <xsl:variable name="rhymeString" as="xs:string">
@@ -225,10 +242,14 @@
                 <xsl:with-param name="remaining" select="remove($operations, 1)"/>
             </xsl:apply-templates>
         </xsl:variable>
-        <!-- Add line order and rhyme string to line -->
-        <line position="{position()}" rhymeString="{$rhymeString}">
+        <!-- Add line order, rhyme string, and bitstring to line -->
+        <xsl:variable name="bitString" as="xs:string" select="djb:bits($rhymeString)"/>
+        <line position="{position()}" rhymeString="{$rhymeString}" bitString="{$bitString}">
             <xsl:apply-templates/>
         </line>
+    </xsl:template>
+    <xsl:template match="line/text()">
+        <xsl:value-of select="replace(., '\s+', ' ')"/>
     </xsl:template>
     <!-- djb:prepareWords
         Convert stressed vowels to uppercase and remove <stress> tags
