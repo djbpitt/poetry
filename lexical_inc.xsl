@@ -60,7 +60,7 @@
         select="tokenize('немнОго мнОго стрОго убОго разлОго отлОго полОго', ' ')"/>
     <!-- lexical() : processes idiosyncratic lexical exceptions -->
     <xsl:function name="djb:lexical" as="xs:string+">
-        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:param name="input" as="xs:string"/>
         <xsl:variable name="tokenized" select="tokenize($input, '\s+')"/>
         <xsl:variable name="results" as="xs:string+">
             <xsl:for-each select="$tokenized">

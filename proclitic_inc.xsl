@@ -15,8 +15,8 @@
     <xsl:variable name="proclitics" select="document('proclitics.xml')//proclitic"
         as="element(proclitic)+"/>
     <xsl:function name="djb:proclitic" as="xs:string+">
-        <xsl:param name="input" as="xs:string" required="yes"/>
-        <xsl:param name="pos" as="xs:integer" required="yes"/>
+        <xsl:param name="input" as="xs:string"/>
+        <xsl:param name="pos" as="xs:integer"/>
         <!-- Reverse the string so that clitics will be recognizable after merger; needed for clitic sequences -->
         <xsl:variable name="tokenized" select="reverse(tokenize($input, '\s+'))"/>
         <!-- Merge a proclitic with the following (after reversal) string -->

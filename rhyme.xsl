@@ -23,7 +23,7 @@
         License: GNU AGPLv3
         History:
             2016-05-15: First version
-            2016-09-01: Minor adjustments to documentation
+            2016-09-01: Expanded documentation
 
         Visitor pattern steps
         =====================
@@ -32,6 +32,7 @@
             Convert other text to lowercase
             Strip punctuation
             Normalize white space
+        djb:lexical(): Correct for -ого and lexical idiosyncrasies (e.g., солнце)
         djb:proclitics() : Merge proclitics with bases
         djb:enclitics() : Merge enclitics with bases
         djb:tsa() : Convert ть?ся$ to тса
@@ -62,7 +63,7 @@
     <xsl:variable name="featureFile" as="document-node()" select="document('feature-chart.xhtml')"/>
     <xsl:key name="bitStringBySegment" match="html:tr" use="html:th"/>
     <xsl:function name="djb:bits" as="xs:string">
-        <xsl:param name="input" as="xs:string" required="yes"/>
+        <xsl:param name="input" as="xs:string"/>
         <xsl:variable name="bitStrings" as="xs:string+">
             <xsl:for-each
                 select="
@@ -265,6 +266,7 @@
         <xsl:param name="input" as="element(line)" required="yes"/>
         <xsl:param name="remaining" as="element()*"/>
         <xsl:variable name="withWhiteSpace" as="xs:string+">
+            <!-- uppercase stressed vowel, lowercase other letters, strip punctuation -->
             <xsl:apply-templates select="$input" mode="#current"/>
         </xsl:variable>
         <xsl:variable name="result" as="xs:string" select="string-join($withWhiteSpace, '')"/>
@@ -417,7 +419,7 @@
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
                 <!-- ******************************************* -->
-                <!-- djb:regressiveVoice Regressive devoicing of obstruents, including /v/ -->
+                <!-- djb:regressiveVoice Regressive voicing of obstruents, but not before /v/ -->
                 <!-- ******************************************* -->
                 <!-- 
                     ɣ (LC) = U+0263, Ɣ (UC) = U+0194

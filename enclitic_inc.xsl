@@ -15,8 +15,8 @@
     <xsl:variable name="enclitics" select="document('enclitics.xml')//enclitic"
         as="element(enclitic)+"/>
     <xsl:function name="djb:enclitic" as="xs:string+">
-        <xsl:param name="input" as="xs:string" required="yes"/>
-        <xsl:param name="pos" as="xs:integer" required="yes"/>
+        <xsl:param name="input" as="xs:string"/>
+        <xsl:param name="pos" as="xs:integer"/>
         <xsl:variable name="tokenized" select="tokenize($input, '\s+')"/>
         <!-- Merge an enclitic with the preceding string -->
         <xsl:variable name="result" as="xs:string+">
