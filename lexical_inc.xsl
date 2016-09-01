@@ -11,11 +11,15 @@
             Call as djb:lexical($input)
         Dependency: lexical.xml (in same directory)
         License: GNU AGPLv3
+        History:
+            2016-05-16 First version
+            2016-09-01 Expanded documentation
         
         Ad hoc pairs are imported from lexical.xml
-        -ogo/-ego are handled separately
+        -ogo/-ego are handled separately by djb:ogo(), after using $ogoExceptions to exclude false positives
     -->
     <xsl:function name="djb:replaceOrths" as="xs:string">
+        <!-- Execute all pairwise replacements in lexical.xml file -->
         <xsl:param name="input" as="xs:string"/>
         <xsl:param name="offset" as="xs:integer"/>
         <xsl:choose>

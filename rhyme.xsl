@@ -4,7 +4,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
     <!--
         Filename: rhyme.xsl
-        Developer: djb 2015-05-15
+        Developer: David J. Birnbaum 2015-05-15
         Repo: http://github.com/djbpitt/poetry
         Synopsis:
             Adds rhyme scheme annotation and line numbers within stanza to XML input
@@ -18,8 +18,12 @@
             Regex based on:
                 http://akhmatova.obdurodon.org/resources.html
                 http://dh.obdurodon.org/drupal/iterating-over-transformations-without-you-know-hitting-go-million-times
-            Thanks to WP for the "visitor pattern" pointer            
+                    (requires authentication)
+            Thanks to Wendell Piez for the "visitor pattern" pointer            
         License: GNU AGPLv3
+        History:
+            2016-05-15: First version
+            2016-09-01: Minor adjustments to documentation
 
         Visitor pattern steps
         =====================
