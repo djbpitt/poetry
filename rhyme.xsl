@@ -482,7 +482,7 @@
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
                 <!-- ******************************************* -->
-                <!-- djb:consonantCleanup() : c > ts, sč to šč, degeminate -->
+                <!-- djb:consonantCleanup() : c > ts, sČ to ŠČ, degeminate -->
                 <!-- ******************************************* -->
                 <xsl:when test="self::djb:consonantCleanup">
                     <xsl:variable name="result3" as="xs:string+">
@@ -518,7 +518,7 @@
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
                 <!-- ******************************************* -->
-                <!-- djb:vowelReduction() : unstressed non-high vowels are i after soft consonants and i < e, a < o after hard -->
+                <!-- djb:vowelReduction() : unstressed non-high vowels > i after soft consonants and e > i, o > a after hard -->
                 <!-- ******************************************* -->
                 <xsl:when test="self::djb:vowelReduction">
                     <xsl:variable name="result1" as="xs:string+">
@@ -557,13 +557,13 @@
                             <xsl:matching-substring>
                                 <xsl:value-of
                                     select="
-                                        concat(if (regex-group(3) eq '') then
+                                        concat(if (regex-group(3) eq '')
+                                        then
                                             regex-group(1)
                                         else
-                                            (), regex-group(2), if (regex-group(3) ne '') then
-                                            regex-group(3)
-                                        else
-                                            ())"
+                                            (),
+                                        regex-group(2),
+                                        regex-group(3))"
                                 />
                             </xsl:matching-substring>
                         </xsl:analyze-string>
@@ -575,7 +575,7 @@
                 <!-- ******************************************* -->
                 <!--<xsl:otherwise>
                     <xsl:apply-templates select="$remaining[1]" mode="visit">
-                        <xsl:with-param name="remainig" select="remove($remaining, 1)"/>
+                        <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
                         <xsl:with-param name="so-far" select="so-far"/>
                     </xsl:apply-templates>
                 </xsl:otherwise>-->
