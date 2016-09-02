@@ -26,7 +26,7 @@
             2016-09-01: Expanded documentation
 
         Visitor pattern steps
-        =====================
+        =========================================
         djb:prepareWords() : Flatten
             Convert stressed vowels to uppercase and remove stress tags
             Convert other text to lowercase
@@ -60,6 +60,9 @@
                 izvestn.*, lestn.*, mestn.*, okrestnost.*, častn.*, sčastliv.*
     -->
     <xsl:output method="xml" indent="yes"/>
+    <!-- ======================================== -->
+    <!-- Create bitstring for rhyming segment -->
+    <!-- ======================================== -->
     <xsl:variable name="featureFile" as="document-node()" select="document('feature-chart.xhtml')"/>
     <xsl:key name="bitStringBySegment" match="html:tr" use="html:th"/>
     <xsl:function name="djb:bits" as="xs:string">
@@ -76,6 +79,11 @@
         </xsl:variable>
         <xsl:sequence select="string-join($bitStrings, '')"/>
     </xsl:function>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- Sample poem, used when stylesheet is run against itself -->
+    <!-- ======================================== -->
     <xsl:variable name="poem" as="element(poem)">
         <poem>
             <meta>
@@ -146,10 +154,20 @@
             </body>
         </poem>
     </xsl:variable>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- Variables used for rhyme scheme ($alphabet) and rhyme gender ($gender) -->
+    <!-- ======================================== -->
     <xsl:variable name="alphabet"
         select="tokenize('a b c d e f g h i j k l m n o p q r s t u v w x y z', ' ')"
         as="xs:string+"/>
     <xsl:variable name="genders" select="tokenize('m f d h', ' ')" as="xs:string+"/>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- Process <poem> element (external or embedded); identity template -->
+    <!-- ======================================== -->
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="tokenize(base-uri(), '/')[last()] eq 'rhyme.xsl'">
@@ -168,7 +186,11 @@
             <xsl:apply-templates select="node() | @*"/>
         </xsl:copy>
     </xsl:template>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
     <!-- "Visitor" pattern; perform operations in this order -->
+    <!-- ======================================== -->
     <xsl:variable name="operations" as="element()+">
         <djb:prepareWords/>
         <djb:lexical/>
@@ -192,13 +214,22 @@
         <djb:stripSpaces/>
         <djb:rhymeString/>
     </xsl:variable>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
     <!-- Process stanzas here -->
+    <!-- ======================================== -->
     <xsl:template match="stanza">
-        <stanza>
-            <!-- Group lines by rhyme strings and assign alphabetic letters in order -->
+        <xsl:variable name="lines_with_exact_rhyme" as="element(line)+">
+            <!-- ======================================== -->
+            <!-- Process lines phonetically before determining rhyme scheme -->
+            <!-- ======================================== -->
             <xsl:variable name="processed" as="element(line)+">
                 <xsl:apply-templates select="line"/>
             </xsl:variable>
+            <!-- ======================================== -->
+            <!-- Group lines by rhyme and create rhyme scheme -->
+            <!-- ======================================== -->
             <xsl:variable name="outputLines" as="element(line)+">
                 <xsl:for-each-group select="$processed" group-by="@rhymeString">
                     <xsl:variable name="offset" as="xs:integer" select="position()"/>
@@ -235,19 +266,35 @@
                 <xsl:sort select="number(@position)"/>
                 <xsl:copy-of select="."/>
             </xsl:for-each>
+        </xsl:variable>
+        <!-- ======================================== -->
+        <!--
+            By this stage $stanza_with_exact_rhyme includes all exact rhymes
+            Now process for inexact
+        -->
+        <!-- ======================================== -->
+        <stanza>
+            <xsl:sequence select="$lines_with_exact_rhyme"/>
         </stanza>
     </xsl:template>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
     <!-- Process lines here -->
-    <!--<xsl:include href="../xstuff/bitmask.xsl"/>-->
+    <!-- ======================================== -->
     <xsl:template match="line">
-        <!-- Get the rhyme string -->
+        <!-- ======================================== -->
+        <!-- The visitor tour gets the rhyme string -->
+        <!-- ======================================== -->
         <xsl:variable name="rhymeString" as="xs:string">
             <xsl:apply-templates select="$operations[1]" mode="operate">
                 <xsl:with-param name="input" select="."/>
                 <xsl:with-param name="remaining" select="remove($operations, 1)"/>
             </xsl:apply-templates>
         </xsl:variable>
+        <!-- ======================================== -->
         <!-- Add line order, rhyme string, and bitstring to line -->
+        <!-- ======================================== -->
         <xsl:variable name="bitString" as="xs:string" select="djb:bits($rhymeString)"/>
         <line position="{position()}" rhymeString="{$rhymeString}" bitString="{$bitString}">
             <xsl:apply-templates/>
@@ -256,12 +303,18 @@
     <xsl:template match="line/text()">
         <xsl:value-of select="replace(., '\s+', ' ')"/>
     </xsl:template>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
     <!-- djb:prepareWords
         Convert stressed vowels to uppercase and remove <stress> tags
         Lowercase everything else
         Strip punctuation
         Input is <line>, output is string, all subsequent operations are on strings
+        This is the only visitor pattern not included in the general rule below
+            because it takes element(line) input
     -->
+    <!-- ======================================== -->
     <xsl:template match="djb:prepareWords" mode="operate">
         <xsl:param name="input" as="element(line)" required="yes"/>
         <xsl:param name="remaining" as="element()*"/>
@@ -284,42 +337,51 @@
     <xsl:template match="line/text()" mode="operate">
         <xsl:value-of select="replace(lower-case(.), '\p{P}', '')"/>
     </xsl:template>
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- Include external functions -->
+    <!-- ======================================== -->
     <xsl:include href="proclitic_inc.xsl"/>
     <xsl:include href="enclitic_inc.xsl"/>
     <xsl:include href="lexical_inc.xsl"/>
-    <!-- all visitor elements except djb:prepareWords, which requires element (not string) input -->
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- all visitor elements except djb:prepareWords (above), which requires element (not string) input -->
+    <!-- ======================================== -->
     <xsl:template match="djb:*" mode="operate">
         <xsl:param name="input" as="xs:string" required="yes"/>
         <xsl:param name="remaining" as="element()*"/>
         <xsl:variable name="results" as="xs:string*">
             <xsl:choose>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:lexical: Idiosyncrasies in pronunciation (including -ogo) -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:lexical">
                     <xsl:sequence select="djb:lexical($input)"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:proclitics: Merge proclitics with bases -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:proclitics">
                     <xsl:sequence select="djb:proclitic($input, 1)"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:enclitics: Merge enclitics with bases -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:enclitics">
                     <xsl:sequence select="djb:enclitic($input, 1)"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:tsa: Convert ть?ся$ to тса -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:tsa">
                     <xsl:sequence select="replace($input, 'ться$', 'тса')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:palatalize: Capitalize all palatalized consonants (including unpaired) -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:palatalize">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
@@ -335,9 +397,9 @@
                     </xsl:variable>
                     <xsl:sequence select="translate(string-join($result1, ''), 'чйщ', 'ЧЙЩ')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:jot() : Normalize /j/ -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!--                
                     Insert Й before softening vowels after vowels, hard or soft sign, and (except in anlaut) и
                     Convert softening vowels to non-softening
@@ -373,17 +435,17 @@
                         select="translate(string-join($result2, ''), 'яеиёюЯЕИЁЮьъ', 'аэыоуАЭЫОУ')"
                     />
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:romanize: Romanize now that all information is encoded in the segment -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:romanize">
                     <xsl:sequence
                         select="replace(translate($input, 'абвгджзклмнопрстуфхцшыэАБВГДЖЗЙКЛМНОПРСТУФХЦЧШЩЫЭ', 'abvgdžzklmnoprstufxcšieABVGDŽZJKLMNOPRSTUFXCČŠQIE'), 'Q', 'ŠČ')"
                     />
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:finalDevoice: Devoice obstruents in auslaut -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:finalDevoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="([bvgdžzBVGDZ])( |$)">
@@ -399,9 +461,9 @@
                     </xsl:variable>
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:regressiveDevoice: Regressive devoicing of obstruents, including /v/ -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:regressiveDevoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
@@ -418,9 +480,9 @@
                     </xsl:variable>
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:regressiveVoice Regressive voicing of obstruents, but not before /v/ -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- 
                     ɣ (LC) = U+0263, Ɣ (UC) = U+0194
                     ʒ (LC) = U+0292, Ʒ (UC) = U+01B7
@@ -442,9 +504,9 @@
                     </xsl:variable>
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:palatalAssimilation: Regressive palatalization assimilation -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- šc has already been split, so requires special treatment -->
                 <xsl:when test="self::djb:palatalAssimilation">
                     <xsl:variable name="result3" as="xs:string+">
@@ -481,9 +543,9 @@
                     </xsl:variable>
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:consonantCleanup() : c > ts, sČ to ŠČ, degeminate -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:consonantCleanup">
                     <xsl:variable name="result3" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="c">
@@ -517,9 +579,9 @@
                     </xsl:variable>
                     <xsl:sequence select="string-join($result1, '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:vowelReduction() : unstressed non-high vowels > i after soft consonants and e > i, o > a after hard -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:vowelReduction">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input" regex="([BVGDJZKLMNPRSTFXČ])([eao])">
@@ -533,24 +595,24 @@
                     </xsl:variable>
                     <xsl:sequence select="translate(string-join($result1, ''), 'eo', 'ia')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:diagnosticOutput() : write string to stderr as <xsl:message> -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:diagnosticOutput">
                     <xsl:message>
                         <xsl:sequence select="$input"/>
                     </xsl:message>
                     <xsl:sequence select="$input"/>
                 </xsl:when>
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <!-- djb:stripSpaces() : strip all white space -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:stripSpaces">
                     <xsl:sequence select="translate($input, ' ', '')"/>
                 </xsl:when>
-                <!-- ******************************************* -->
-                <!-- djb:rhymeString(): rhyme string is last stressed vowel, all following, supporting C for open masculine -->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
+                <!-- djb:rhymeString(): last stressed vowel, all following, supporting C for open masculine -->
+                <!-- ======================================== -->
                 <xsl:when test="self::djb:rhymeString">
                     <xsl:variable name="result" as="xs:string">
                         <xsl:analyze-string select="$input" regex="(.)([AEIOU])([^AEIOU]*)$">
@@ -570,18 +632,18 @@
                     </xsl:variable>
                     <xsl:sequence select="$result"/>
                 </xsl:when>
-                <!-- ******************************************* -->
-                <!-- Default to continue processing if operate step has no code-->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
+                <!-- Default to continue processing if operate step has no code -->
+                <!-- ======================================== -->
                 <!--<xsl:otherwise>
                     <xsl:apply-templates select="$remaining[1]" mode="visit">
                         <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
                         <xsl:with-param name="so-far" select="so-far"/>
                     </xsl:apply-templates>
                 </xsl:otherwise>-->
-                <!-- ******************************************* -->
-                <!-- Default to terminate if operate step has no code-->
-                <!-- ******************************************* -->
+                <!-- ======================================== -->
+                <!-- Default to terminate if operate step has no code -->
+                <!-- ======================================== -->
                 <xsl:otherwise>
                     <xsl:message terminate="yes">Unmatched visitor element <xsl:value-of
                             select="local-name()"/></xsl:message>
@@ -589,6 +651,9 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="result" as="xs:string" select="string-join($results, '')"/>
+        <!-- ======================================== -->
+        <!-- Move on to the next step or return if done -->
+        <!-- ======================================== -->
         <xsl:apply-templates select="$remaining[1]" mode="#current">
             <xsl:with-param name="input" select="$result"/>
             <xsl:with-param name="remaining" select="remove($remaining, 1)"/>
