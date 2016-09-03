@@ -162,7 +162,7 @@
     <xsl:variable name="alphabet"
         select="tokenize('a b c d e f g h i j k l m n o p q r s t u v w x y z', ' ')"
         as="xs:string+"/>
-    <xsl:variable name="genders" select="tokenize('m f d h', ' ')" as="xs:string+"/>
+    <xsl:variable name="genders" select="tokenize('m f d h1 h2 h3', ' ')" as="xs:string+"/>
     <!-- ======================================== -->
 
     <!-- ======================================== -->
@@ -238,7 +238,7 @@
                     <xsl:variable name="gender" as="xs:string"
                         select="$genders[position() eq string-length($posttonic) + 1]"/>
                     <xsl:variable name="letter" as="xs:string"
-                        select="$alphabet[position() eq $offset]"/>
+                        select="$alphabet[position() eq (if ($offset mod 26 eq 0) then 26 else $offset mod 26)]"/>
                     <xsl:variable name="renderedLetter" as="xs:string">
                         <xsl:choose>
                             <xsl:when test="$gender eq 'm'">
@@ -568,7 +568,7 @@
                         </xsl:analyze-string>
                     </xsl:variable>
                     <xsl:variable name="result1" as="xs:string+">
-                        <xsl:analyze-string select="$result2" regex="(.)\1">
+                        <xsl:analyze-string select="string-join($result2, '')" regex="(.)\1">
                             <xsl:matching-substring>
                                 <xsl:value-of select="regex-group(1)"/>
                             </xsl:matching-substring>
