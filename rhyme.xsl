@@ -57,13 +57,19 @@
     -->
     <xsl:output method="xml" indent="yes"/>
     <!-- ======================================== -->
-    <!-- Create bitstring for rhyming segment -->
+    <!-- 
+        Create bitstring for rhyming segment; return rhyming vowel and full bitstring 
+    -->
     <!-- ======================================== -->
     <xsl:variable name="featureFile" as="document-node()" select="document('feature-chart.xhtml')"/>
     <xsl:key name="bitStringBySegment" match="html:tr" use="html:th"/>
-    <xsl:function name="djb:bits" as="xs:string">
+    <xsl:function name="djb:bits" as="xs:string+">
         <xsl:param name="input" as="xs:string"/>
+        <xsl:variable name="stressedVowel" as="xs:string" select="replace($input, '[^AEIOU]', '')"/>
+        <xsl:variable name="rhymeVowelBitString" as="xs:string"
+            select="string-join(key('bitStringBySegment', $stressedVowel, $featureFile)/html:td, '')"/>
         <xsl:variable name="bitStrings" as="xs:string+">
+            <!-- bitstring for full rhyme -->
             <xsl:for-each
                 select="
                     for $char in string-to-codepoints($input)
@@ -73,7 +79,7 @@
                     select="string-join(key('bitStringBySegment', ., $featureFile)/html:td, '')"/>
             </xsl:for-each>
         </xsl:variable>
-        <xsl:sequence select="string-join($bitStrings, '')"/>
+        <xsl:sequence select="($rhymeVowelBitString, string-join($bitStrings, ''))"/>
     </xsl:function>
     <!-- ======================================== -->
 
@@ -150,56 +156,58 @@
     <!-- Process stanzas here -->
     <!-- ======================================== -->
     <xsl:template match="stanza">
-        <xsl:variable name="lines_with_exact_rhyme" as="element(line)+">
-            <!-- ======================================== -->
-            <!-- Process lines phonetically before determining rhyme scheme -->
-            <!-- ======================================== -->
-            <xsl:variable name="processed" as="element(line)+">
-                <xsl:apply-templates select="line"/>
-            </xsl:variable>
-            <!-- ======================================== -->
-            <!-- Group lines by rhyme and create rhyme scheme -->
-            <!-- ======================================== -->
-            <xsl:variable name="outputLines" as="element(line)+">
-                <xsl:for-each-group select="$processed" group-by="@rhymeString">
-                    <xsl:variable name="offset" as="xs:integer" select="position()"/>
-                    <xsl:variable name="posttonic" as="xs:string"
-                        select="replace(current-grouping-key(), '[^aeiou]+', '')"/>
-                    <xsl:variable name="gender" as="xs:string"
-                        select="$genders[position() eq string-length($posttonic) + 1]"/>
-                    <xsl:variable name="letter" as="xs:string"
-                        select="
-                            $alphabet[position() eq (if ($offset mod 26 eq 0) then
-                                26
-                            else
-                                $offset mod 26)]"/>
-                    <xsl:variable name="renderedLetter" as="xs:string">
-                        <xsl:choose>
-                            <xsl:when test="$gender eq 'm'">
-                                <xsl:value-of select="$letter"/>
-                            </xsl:when>
-                            <xsl:when test="$gender eq 'f'">
-                                <xsl:value-of select="upper-case($letter)"/>
-                            </xsl:when>
-                            <xsl:when test="$gender eq 'd'">
-                                <xsl:value-of select="concat(upper-case($letter), '′')"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="concat(upper-case($letter), '′′')"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:variable>
-                    <xsl:for-each select="current-group()">
-                        <line letter="{$renderedLetter}">
-                            <xsl:apply-templates select="@* | node()"/>
-                        </line>
-                    </xsl:for-each>
-                </xsl:for-each-group>
-            </xsl:variable>
-            <xsl:for-each select="$outputLines">
-                <xsl:sort select="number(@position)"/>
-                <xsl:copy-of select="."/>
-            </xsl:for-each>
+        <xsl:variable name="lines_with_exact_rhyme" as="element(stanza)">
+            <stanza>
+                <!-- ======================================== -->
+                <!-- Process lines phonetically before determining rhyme scheme -->
+                <!-- ======================================== -->
+                <xsl:variable name="processed" as="element(line)+">
+                    <xsl:apply-templates select="line"/>
+                </xsl:variable>
+                <!-- ======================================== -->
+                <!-- Group lines by rhyme and create rhyme scheme -->
+                <!-- ======================================== -->
+                <xsl:variable name="outputLines" as="element(line)+">
+                    <xsl:for-each-group select="$processed" group-by="@rhymeString">
+                        <xsl:variable name="offset" as="xs:integer" select="position()"/>
+                        <xsl:variable name="posttonic" as="xs:string"
+                            select="replace(current-grouping-key(), '[^aeiou]+', '')"/>
+                        <xsl:variable name="gender" as="xs:string"
+                            select="$genders[position() eq string-length($posttonic) + 1]"/>
+                        <xsl:variable name="letter" as="xs:string"
+                            select="
+                                $alphabet[position() eq (if ($offset mod 26 eq 0) then
+                                    26
+                                else
+                                    $offset mod 26)]"/>
+                        <xsl:variable name="renderedLetter" as="xs:string">
+                            <xsl:choose>
+                                <xsl:when test="$gender eq 'm'">
+                                    <xsl:value-of select="$letter"/>
+                                </xsl:when>
+                                <xsl:when test="$gender eq 'f'">
+                                    <xsl:value-of select="upper-case($letter)"/>
+                                </xsl:when>
+                                <xsl:when test="$gender eq 'd'">
+                                    <xsl:value-of select="concat(upper-case($letter), '′')"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="concat(upper-case($letter), '′′')"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+                        <xsl:for-each select="current-group()">
+                            <line letter="{$renderedLetter}">
+                                <xsl:apply-templates select="@* | node()"/>
+                            </line>
+                        </xsl:for-each>
+                    </xsl:for-each-group>
+                </xsl:variable>
+                <xsl:for-each select="$outputLines">
+                    <xsl:sort select="number(@position)"/>
+                    <xsl:copy-of select="."/>
+                </xsl:for-each>
+            </stanza>
         </xsl:variable>
         <!-- ======================================== -->
         <!--
@@ -207,12 +215,12 @@
             Now process for inexact
         -->
         <!-- ======================================== -->
-        <stanza>
-            <xsl:apply-templates select="$lines_with_exact_rhyme"/>
-        </stanza>
+        <xsl:apply-templates select="$lines_with_exact_rhyme" mode="inexact"/>
     </xsl:template>
     <!-- ======================================== -->
 
+    <!-- ======================================== -->
+    <!-- First fine exact rhymes (no mode) -->
     <!-- ======================================== -->
     <!-- Process original input lines here -->
     <!-- ======================================== -->
@@ -229,8 +237,9 @@
         <!-- ======================================== -->
         <!-- Add line order, rhyme string, and bitstring to line -->
         <!-- ======================================== -->
-        <xsl:variable name="bitString" as="xs:string" select="djb:bits($rhymeString)"/>
-        <line position="{position()}" rhymeString="{$rhymeString}" bitString="{$bitString}">
+        <xsl:variable name="bitStrings" as="xs:string+" select="djb:bits($rhymeString)"/>
+        <line position="{position()}" rhymeString="{$rhymeString}" vowelBitString="{$bitStrings[1]}"
+            bitString="{$bitStrings[2]}">
             <xsl:apply-templates/>
         </line>
     </xsl:template>
@@ -595,5 +604,37 @@
         <xsl:if test="empty($remaining)">
             <xsl:sequence select="$result"/>
         </xsl:if>
+    </xsl:template>
+    <!-- ======================================== -->
+    <!-- Process inexact rhyme (mode="inexact") -->
+    <!-- ======================================== -->
+    <xsl:template match="node() | @*" mode="inexact">
+        <xsl:copy>
+            <xsl:apply-templates select="node() | @*" mode="#current"/>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="stanza" mode="inexact">
+        <xsl:variable name="all_letters" as="xs:string+" select="line/@letter"/>
+        <xsl:variable name="unmatched_letters" as="xs:string*"
+            select="$all_letters[count(index-of($all_letters, .)) eq 1]"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@* | node()" mode="#current">
+                <xsl:with-param name="unmatched_letters" select="$unmatched_letters"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="line" mode="inexact">
+        <xsl:param name="unmatched_letters" required="no"/>
+        <xsl:variable name="current_letter" as="xs:string" select="@letter"/>
+        <xsl:choose>
+            <xsl:when test="count(../line/@letter[. eq $current_letter]) gt 1">
+                <xsl:copy-of select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+                <line>
+                    <xsl:value-of select="$unmatched_letters"/>
+                </line>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 </xsl:stylesheet>
