@@ -1,0 +1,31 @@
+Rhyme work plan
+
+General: Update web site (no specific changes)
+
+Steadily: Keep working on the dictionary (adjectives for Elise, verbs for David)
+
+Ignore heterosyllabic and other rhyme with unequal segment counts for now
+
+1) Within stanza:
+* Find non-rhyming lines
+Create additional bitstring for just stressed vowel
+Build table of all rhyming and non-rhyming bitstrings
+Assign non-rhyming lines according to following ranked priorities
+(domain provisionally 6; test others later)
+a) Closest match; weight stressed vowel more heavily than anything
+b) Closest proximity? (probably won't be needed)
+Some lines may not rhyme with anything, e.g., ABCB
+
+2) Compare stanzas to identify rhyme scheme
+Is there a regular pattern across stanzas? If so, adjust for it
+Check for false matches in, e.g., ABCB; identify by large edit distance and pattern
+
+3) After rhyme schemes have been identified for seed corpus
+Load poems into eXist
+Create API to find existing rhymes (exact and inexact)
+Build lookup into algorithm for subsequent content
+
+4) Analysis
+Common ~ uncommon rhyme by poet
+Feature analysis by poet
+
