@@ -50,23 +50,23 @@ Sample output:
 
 The segment notation (and the bit strings that represent the phonetics of the segements) are documented in feature-chart.xhtml.
 
-##Imports
+## Imports
 
 All imports are from the same directory *unless otherwise noted*
 
-###proclitic\_inc.xsl, enclitic\_inc.xsl
+### proclitic\_inc.xsl, enclitic\_inc.xsl
 
 Merge proclitics and enclitics with head words. These files import **proclitics.xml** and **enclitics.xml**, respectively.
 
-###lexical_inc.xsl
+### lexical_inc.xsl
 
 Manages lexical exceptions to the orthography-to-phonetics algorithm. Imports **lexical.xml**.
 
-###feature-chart.xhtml
+### feature-chart.xhtml
 
 Matrix of phonetic features according to our transcription system. The segments constitute the rows and the features have 0 and 1 values. May be displayed for documentation, but also imported into **rhyme.xsl** to generate bit strings for segments.
 
-###bitmask.xsl
+### bitmask.xsl
 
 Imported as **../xstuff/bitmask.xsl**
 
