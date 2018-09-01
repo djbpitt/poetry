@@ -508,7 +508,7 @@
                 <xsl:when test="self::djb:regressiveVoice">
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
-                            regex="([bvgdžzBVGDZpfktšsPFKTSkcČ]+)([bgdžzBGDZ])">
+                            regex="([bvgdžzBVGDZpfktšsPFKTSxcČ]+)([bgdžzBGDZ])">
                             <xsl:matching-substring>
                                 <xsl:value-of
                                     select="concat(translate(regex-group(1), 'pfktšsPFKTSxcČ', 'bvgdžzBVGDZɣʒǮ'), regex-group(2))"
