@@ -426,7 +426,7 @@
                     <!-- $result1 processes softening vowels after vowels and signs, but not in anlaut-->
                     <xsl:variable name="result1" as="xs:string+">
                         <xsl:analyze-string select="$input"
-                            regex="([аэыоюяеиёюАЭЫОУЯЕИЁЮьъ])([яеиёюЯЕИЁЮ])">
+                            regex="([аэыоуяеиёюАЭЫОУЯЕИЁЮьъ])([яеиёюЯЕИЁЮ])">
                             <xsl:matching-substring>
                                 <xsl:value-of select="concat(regex-group(1), 'Й', regex-group(2))"/>
                             </xsl:matching-substring>
